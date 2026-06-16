@@ -6,12 +6,12 @@
 
 // clang-format off
 
-// Button used to activate mode-switch combos. Override with -D USE_START_BUTTON to use MB1 (Start)
-// instead of RF8 (MS).
-#ifdef USE_START_BUTTON
-#define BTN_MODE_SELECT BTN_MB1
-#else
+// Button used to activate mode-switch combos. Override with -D USE_MS_BUTTON to use RF8 (MS)
+// instead of MB1 (Start).
+#ifdef USE_MS_BUTTON
 #define BTN_MODE_SELECT BTN_RF8
+#else
+#define BTN_MODE_SELECT BTN_MB1
 #endif
 
 const Config default_config = {

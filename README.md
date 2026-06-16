@@ -61,10 +61,10 @@ Two pre-built firmware variants are provided for the Pico, differing only in whi
 
 | Variant | File | Mode switch button |
 | ------- | ---- | ------------------ |
-| `pico` | `HayBox-*-pico.uf2` | **RF8 (MS)** — default, matches the standard B0XX layout |
-| `pico_start` | `HayBox-*-pico_start.uf2` | **MB1 (Start)** — intended for builds where Start is used as the "Up" button in a WASD layout, freeing MS for normal gameplay use |
+| `pico` | `HayBox-*-pico.uf2` | **MB1 (Start)** — default, standard for box-style controllers |
+| `pico_ms` | `HayBox-*-pico_ms.uf2` | **RF8 (MS)** — for WASD-style layouts where Start is used as the "Up" direction |
 
-Choose `pico_start` if your build uses Start as the up/W direction in a WASD-style layout and you want a dedicated button free for mode switching. All other behaviour is identical between the two variants. Each variant stores its configuration separately in flash, so flashing one will not corrupt the saved config of the other.
+Most box controller users should use `pico`. Choose `pico_ms` only if your layout uses Start as the W/Up direction (a WASD movement layout), where MS is free to serve as the mode-switch button instead. All other behaviour is identical between the two variants. Each variant stores its configuration separately in flash, so flashing one will not corrupt the saved config of the other.
 
 ## Installation
 
@@ -159,25 +159,25 @@ you have to hold with one hand while plugging in.
 
 The default controller mode button combinations depend on which firmware variant you are using.
 
-**`pico` variant — mode switch button: RF8 (MS)**
-- RF8 + LT1 + LF4 (MS + MX + L) - Melee mode (default)
-- RF8 + LT1 + LF3 (MS + MX + Left) - Project M/Project+ mode
-- RF8 + LT1 + LF2 (MS + MX + Down) - Ultimate mode
-- RF8 + LT1 + LF1 (MS + MX + Right) - FGC mode (Hitbox style fighting game layout)
-- RF8 + LT1 + RF1 (MS + MX + B) - Rivals of Aether mode
-- RF8 + LT1 + RF5 (MS + MX + R) - Rivals of Aether 2 mode
+**`pico` variant (standard) — mode switch button: MB1 (Start)**
+- Start + MX + L - Melee mode (default)
+- Start + MX + Left - Project M/Project+ mode
+- Start + MX + Down - Ultimate mode
+- Start + MX + Right - FGC mode (Hitbox style fighting game layout)
+- Start + MX + B - Rivals of Aether mode
+- Start + MX + R - Rivals of Aether 2 mode
 
-**`pico_start` variant — mode switch button: MB1 (Start)**
-- MB1 + LT1 + LF4 (Start + MX + L) - Melee mode (default)
-- MB1 + LT1 + LF3 (Start + MX + Left) - Project M/Project+ mode
-- MB1 + LT1 + LF2 (Start + MX + Down) - Ultimate mode
-- MB1 + LT1 + LF1 (Start + MX + Right) - FGC mode (Hitbox style fighting game layout)
-- MB1 + LT1 + RF1 (Start + MX + B) - Rivals of Aether mode
-- MB1 + LT1 + RF5 (Start + MX + R) - Rivals of Aether 2 mode
+**`pico_ms` variant (WASD layouts) — mode switch button: RF8 (MS)**
+- MS + MX + L - Melee mode (default)
+- MS + MX + Left - Project M/Project+ mode
+- MS + MX + Down - Ultimate mode
+- MS + MX + Right - FGC mode (Hitbox style fighting game layout)
+- MS + MX + B - Rivals of Aether mode
+- MS + MX + R - Rivals of Aether 2 mode
 
 Default keyboard mode button combinations (only available when using DInput backend, **not** with XInput):
-- `pico`: RF8 + LT2 + LF4 (MS + Mod Y + L) - Default keyboard mode
-- `pico_start`: MB1 + LT2 + LF4 (Start + Mod Y + L) - Default keyboard mode
+- `pico`: Start + Mod Y + L - Default keyboard mode
+- `pico_ms`: MS + Mod Y + L - Default keyboard mode
 
 ### Dolphin setup
 

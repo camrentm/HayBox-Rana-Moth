@@ -6,6 +6,14 @@
 
 // clang-format off
 
+// Button used to activate mode-switch combos. Override with -D USE_START_BUTTON to use MB1 (Start)
+// instead of RF8 (MS).
+#ifdef USE_START_BUTTON
+#define BTN_MODE_SELECT BTN_MB1
+#else
+#define BTN_MODE_SELECT BTN_RF8
+#endif
+
 const Config default_config = {
     .game_mode_configs_count = 7,
     .game_mode_configs = {
@@ -20,7 +28,7 @@ const Config default_config = {
             },
             .button_remapping_count = 0,
             .activation_binding_count = 3,
-            .activation_binding = { BTN_LT1, BTN_MB1, BTN_LF4 },
+            .activation_binding = { BTN_LT1, BTN_MODE_SELECT, BTN_LF4 },
         },
        GameModeConfig {
             .mode_id = MODE_PROJECT_M,
@@ -33,7 +41,7 @@ const Config default_config = {
             },
             .button_remapping_count = 0,
             .activation_binding_count = 3,
-            .activation_binding = { BTN_LT1, BTN_MB1, BTN_LF3 },
+            .activation_binding = { BTN_LT1, BTN_MODE_SELECT, BTN_LF3 },
         },
         GameModeConfig {
             .mode_id = MODE_ULTIMATE,
@@ -46,7 +54,7 @@ const Config default_config = {
             },
             .button_remapping_count = 0,
             .activation_binding_count = 3,
-            .activation_binding = { BTN_LT1, BTN_MB1, BTN_LF2 },
+            .activation_binding = { BTN_LT1, BTN_MODE_SELECT, BTN_LF2 },
         },
         GameModeConfig {
             .mode_id = MODE_FGC,
@@ -60,7 +68,7 @@ const Config default_config = {
                 ButtonRemap { .physical_button = BTN_RT4, .activates = BTN_LT1 },
             },
             .activation_binding_count = 3,
-            .activation_binding = { BTN_LT1, BTN_MB1, BTN_LF1 },
+            .activation_binding = { BTN_LT1, BTN_MODE_SELECT, BTN_LF1 },
         },
         GameModeConfig {
             .mode_id = MODE_RIVALS_OF_AETHER,
@@ -73,7 +81,7 @@ const Config default_config = {
             },
             .button_remapping_count = 0,
             .activation_binding_count = 3,
-            .activation_binding = { BTN_LT1, BTN_MB1, BTN_RF1 },
+            .activation_binding = { BTN_LT1, BTN_MODE_SELECT, BTN_RF1 },
         },
         GameModeConfig {
             .mode_id = MODE_RIVALS_2,
@@ -86,7 +94,7 @@ const Config default_config = {
             },
             .button_remapping_count = 0,
             .activation_binding_count = 3,
-            .activation_binding = { BTN_LT1, BTN_MB1, BTN_RF5 },
+            .activation_binding = { BTN_LT1, BTN_MODE_SELECT, BTN_RF5 },
         },
         GameModeConfig {
             .mode_id = MODE_KEYBOARD,
@@ -97,7 +105,7 @@ const Config default_config = {
             },
             .button_remapping_count = 0,
             .activation_binding_count = 3,
-            .activation_binding = { BTN_LT2, BTN_MB1, BTN_LF4 },
+            .activation_binding = { BTN_LT2, BTN_MODE_SELECT, BTN_LF4 },
             .keyboard_mode_config = 1,
         },
     },

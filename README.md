@@ -32,11 +32,7 @@ HayBox is a modular, cross-platform firmware for digital or mixed analog/digital
 ## Features
 
 Features include:
-- Cross platform support:
-  - RP2040 (e.g. Raspberry Pi Pico)
-  - 16MHz AVR MCUs (e.g. ATMega32U4 which several Arduinos are based on)
-- Supports many existing controllers/PCBs, e.g. B0XX, LBX, Smash Box, Crane's
-  GCCPCB/Model S
+- RP2040 (e.g. Raspberry Pi Pico) support
 - Supports a variety of communication backends which can be used either separately or in conjunction with each other:
   - XInput
   - DInput
@@ -59,6 +55,17 @@ Features include:
 - Game modes and communication backends are independent entities, meaning you can use any game mode with any supported console without extra work
 - Easily switch between different GameCube/N64 polling rates in order to have optimal latency on console, overclocked adapter, etc. (not necessary for Pico/RP2040)
 
+## Firmware Variants
+
+Two pre-built firmware variants are provided for the Pico, differing only in which button is used to activate layout/mode switching combos:
+
+| Variant | File | Mode switch button |
+| ------- | ---- | ------------------ |
+| `pico` | `HayBox-*-pico.uf2` | **RF8 (MS)** — default, matches the standard B0XX layout |
+| `pico_start` | `HayBox-*-pico_start.uf2` | **MB1 (Start)** — intended for builds where Start is used as the "Up" button in a WASD layout, freeing MS for normal gameplay use |
+
+Choose `pico_start` if your build uses Start as the up/W direction in a WASD-style layout and you want a dedicated button free for mode switching. All other behaviour is identical between the two variants. Each variant stores its configuration separately in flash, so flashing one will not corrupt the saved config of the other.
+
 ## Installation
 
 If you want to simply use a pre-built firmware with default pin mappings and configuration, refer to the [pre-built binaries](#pre-built-binaries) section. If you want to make any changes to the code, refer to the [building from source](#building-from-source) section.
@@ -67,9 +74,7 @@ If you want to simply use a pre-built firmware with default pin mappings and con
 
 1. Browse the [existing configs](config/) to determine which config is appropriate for your hardware
 2. Download the corresponding artifact from either the [latest HayBox release](https://github.com/JonnyHaystack/HayBox/releases), or from a [workflow run](https://github.com/JonnyHaystack/HayBox/actions) if you want the latest development version (unstable).
-3. Flash the firmware to your microcontroller in the usual way
-   - If you are using a Pico/RP2040 build (`.uf2` file), simply put it into bootsel mode while plugging it into your PC, and drag and drop the `.uf2` file onto the RPI-RP2 drive that comes up
-   - If you are using Arduino/AVR build (`.hex` file), you can use a program like [QMK Toolbox](https://github.com/qmk/qmk_toolbox) to flash the `.hex` file to it
+3. Flash the firmware to your microcontroller by putting it into bootsel mode while plugging it into your PC, and drag and drop the `.uf2` file onto the RPI-RP2 drive that comes up
 
 ### Building from source
 
@@ -83,7 +88,7 @@ Both GitHub Actions and GitHub Codespaces require you to create a GitHub account
 #### Building locally
 
 The following dependencies are required when building locally:
-- [Git](https://git-scm.com/downloads) - required only if you are using a Pico
+- [Git](https://git-scm.com/downloads)
 - [PlatformIO IDE for VSCode](https://platformio.org/install/ide?install=vscode)
 
 After installing all of the requirements, download and extract the
@@ -105,9 +110,7 @@ After that:
 6. If you see a message in the bottom bar saying "Rebuilding IntelliSense Index" or "Loading Project Tasks", wait for it to disappear. For Pico especially it may take quite a while the first time because it has to download 2-3GB of dependencies.
 7. Click **Build** (in the bottom left) and make sure everything compiles without
   errors
-8. This next step differs depending on the microcontroller used in your controller.
-    - **For Pico-based controllers**: hold the bootsel button while plugging it in (or RT2 (C-Down) if you already have HayBox installed) and then drag and drop the file `HayBox/.pio/build/<environment>/firmware.uf2` onto the RPI-RP2 drive that comes up.
-    - **For Arduino-based controllers**: Plug in your controller via USB and click **Upload** (next to the Build button)
+8. Hold the bootsel button while plugging in your controller (or RT2 (C-Down) if you already have HayBox installed) and then drag and drop the file `HayBox/.pio/build/<environment>/firmware.uf2` onto the RPI-RP2 drive that comes up.
 
 #### Building using GitHub Codespaces
 
@@ -137,28 +140,14 @@ To enter config mode (Pico-based devices only), hold MB1 (Start) on plugin.
 
 To reboot Pico-based controllers into bootsel mode, hold RT2 (C-Down) on plugin.
 
-#### Brook board passthrough mode
-
-To switch to Brook board mode on GCCPCB2, GCCMX, B0XX R2, or LBX, hold RF1 (B) on
-plugin.
-
 #### Communication backends (console selection)
 
-Communication backends are selected slightly differently depending on the type
-of microcontroller used in the controller.
-
-On Pico/RP2040, USB vs GameCube vs Nintendo 64 is detected automatically. If
+USB vs GameCube vs Nintendo 64 is detected automatically. If
 not plugged into a console, the default is **XInput**, which should work
 plug-and-play with most PC games.
 Other backends are selected by holding one of the following buttons on plugin:
 - RF2 (X) - Nintendo Switch USB mode (also sets initial game mode to Ultimate mode)
 - RF3 (Z) - DInput mode (only recommended for games which don't support XInput)
-
-On Arduino/AVR, the **DInput** backend is selected if a USB connection is detected.
-Otherwise, it defaults to GameCube backend, unless another backend is manually
-selected by holding one of the following buttons on plugin:
-- RT1 (A) - GameCube backend with polling rate fix disabled (used for GCC adapters)
-- RT3 (C-Left) - Nintendo 64 backend (60Hz polling rate)
 
 #### Game mode selection
 
@@ -168,16 +157,27 @@ PC, as opposed to console where you usually have to restart the console to
 switch game anyway. It also serves the purpose of reducing the number of buttons
 you have to hold with one hand while plugging in.
 
-The default controller mode button combinations are:
-- MB1 + LT1 + LF4 (Start + Mod X + L) - Melee mode (default)
-- MB1 + LT1 + LF3 (Start + Mod X + Left) - Project M/Project+ mode
-- MB1 + LT1 + LF2 (Start + Mod X + Down) - Ultimate mode
-- MB1 + LT1 + LF1 (Start + Mod X + Right) - FGC mode (Hitbox style fighting game layout)
-- MB1 + LT1 + RF1 (Start + Mod X + B) - Rivals of Aether mode
-- MB1 + LT1 + RF5 (Start + Mod X + R) - Rivals of Aether 2 mode
+The default controller mode button combinations depend on which firmware variant you are using.
+
+**`pico` variant — mode switch button: RF8 (MS)**
+- RF8 + LT1 + LF4 (MS + MX + L) - Melee mode (default)
+- RF8 + LT1 + LF3 (MS + MX + Left) - Project M/Project+ mode
+- RF8 + LT1 + LF2 (MS + MX + Down) - Ultimate mode
+- RF8 + LT1 + LF1 (MS + MX + Right) - FGC mode (Hitbox style fighting game layout)
+- RF8 + LT1 + RF1 (MS + MX + B) - Rivals of Aether mode
+- RF8 + LT1 + RF5 (MS + MX + R) - Rivals of Aether 2 mode
+
+**`pico_start` variant — mode switch button: MB1 (Start)**
+- MB1 + LT1 + LF4 (Start + MX + L) - Melee mode (default)
+- MB1 + LT1 + LF3 (Start + MX + Left) - Project M/Project+ mode
+- MB1 + LT1 + LF2 (Start + MX + Down) - Ultimate mode
+- MB1 + LT1 + LF1 (Start + MX + Right) - FGC mode (Hitbox style fighting game layout)
+- MB1 + LT1 + RF1 (Start + MX + B) - Rivals of Aether mode
+- MB1 + LT1 + RF5 (Start + MX + R) - Rivals of Aether 2 mode
 
 Default keyboard mode button combinations (only available when using DInput backend, **not** with XInput):
-- MB1 + LT2 + LF4 (Start + Mod Y + L) - Default keyboard mode
+- `pico`: RF8 + LT2 + LF4 (MS + Mod Y + L) - Default keyboard mode
+- `pico_start`: MB1 + LT2 + LF4 (Start + Mod Y + L) - Default keyboard mode
 
 ### Dolphin setup
 
@@ -186,11 +186,11 @@ uses different DInput mappings that make more sense for use across multiple game
 can be found in the `dolphin` folder in the HayBox repo. The profile files are named to
 indicate what communication backend and operating system they are for:
 - For Windows:
-  - HayBox_XInput.ini - For Pico/RP2040-based controllers (e.g. B0XX R4)
-  - HayBox_DInput.ini - For Arduino/AVR-based controllers (e.g. B0XX R1-3, LBX)
+  - HayBox_XInput.ini
+  - HayBox_DInput.ini
 - For Linux:
-  - HayBox_XInput_Linux.ini - For Pico/RP2040-based controllers (e.g. B0XX R4)
-  - HayBox_DInput_Linux.ini - For Arduino/AVR-based controllers (e.g. B0XX R1-3, LBX)
+  - HayBox_XInput_Linux.ini
+  - HayBox_DInput_Linux.ini
 - For macOS (unsupported*):
   - HayBox_DInput_macOS.ini
 
@@ -223,15 +223,10 @@ handled in `config/<environment>/config.cpp`, in the `setup()` function.
 The logic is fairly simple, and even if you don't have programming experience it
 shouldn't be too hard to see what's going on and change things if you wish.
 
-The config folders corresponding to the Arduino environments are:
-- `config/arduino_nativeusb/` for Arduino with native USB support (e.g. Leonardo, Micro)
-- `config/arduino/` for Arduino without native USB support (e.g. Uno, Nano, Mega 2560)
-
-For Arduino device configs you may notice that the number 125 is passed into
-`GamecubeBackend()`. This lets you change the polling rate e.g. if your DIY
-doesn't support native USB and you want to use it with an overclocked GameCube
-controller adapter. In that example, you could pass in 1000 to sync up to the
-1000Hz polling rate, or 0 to disable this lag fix completely.
+You may pass a polling rate into `GamecubeBackend()` to change the polling
+rate e.g. if you want to use it with an overclocked GameCube controller
+adapter. For example, you could pass in 1000 to sync up to the 1000Hz polling
+rate, or 0 to disable this lag fix completely.
 Polling rate can be passed into the N64Backend constructor in the same way as this.
 
 You may notice that 1000Hz polling rate works on console as well. Be aware
@@ -429,11 +424,11 @@ pressing Z, you can set the `true_z_press` option to true.
 HayBox supports several input sources that can be read from to update the input
 state:
 - `GpioButtonInput` - The most commonly used, for reading switches/buttons connected directly to GPIO pins. The input mappings are defined by an array of `GpioButtonMapping` as can be seen in almost all existing configs.
-- `SwitchMatrixInput` - Similar to the above, but scans a keyboard style switch matrix instead of individual switches. A config for Crane's Model C<=53 is included at `config/c53/config.cpp` which serves as an example of how to define and use a switch matrix input source.
+- `SwitchMatrixInput` - Similar to the above, but scans a keyboard style switch matrix instead of individual switches.
 - `NunchukInput` - Reads inputs from a Wii Nunchuk using i2c. This can be used for mixed input controllers (e.g. left hand uses a Nunchuk for movement, and right hand uses buttons for other controls)
 - `GamecubeControllerInput` - Similar to the above, but reads from a GameCube controller. Can be instantiated similarly to GamecubeBackend. Currently only implemented for Pico, and you must either run it on a different pio instance (pio0 or pio1) than any instances of GamecubeBackend, or make sure that both use the same PIO instruction memory offset.
 
-Each input source has a "scan speed" value which indicates roughly how long it takes for it to read inputs. Fast input sources are always read at the last possible moment (at least on Pico), resulting in very low latency. Conversely, slow input sources are typically read quite long before they are needed, as they are too slow to be read in response to poll. Because of this, it is more ideal to be constantly reading those inputs on a separate core. This is not possible on AVR MCUs as they are all single core, but it is possible (and easy) on the Pico/RP2040. The bottom of the default Pico config `config/pico/config.cpp` illustrates this by using core1 to read Nunchuk inputs while core0 handles everything else. See [the next section](#using-the-picos-second-core) for more information about using core1.
+Each input source has a "scan speed" value which indicates roughly how long it takes for it to read inputs. Fast input sources are always read at the last possible moment, resulting in very low latency. Conversely, slow input sources are typically read quite long before they are needed, as they are too slow to be read in response to poll. Because of this, it is more ideal to be constantly reading those inputs on a separate core, which the Pico/RP2040 makes easy. The bottom of the default Pico config `config/pico/config.cpp` illustrates this by using core1 to read Nunchuk inputs while core0 handles everything else. See [the next section](#using-the-picos-second-core) for more information about using core1.
 
 
 In each config's `setup()` function, we build up an array of input sources, and then pass it into a communication backend. The communication backend decides when to read which input sources, because inputs need to be read at different points in time for different backends. We also build an array of communication backends, allowing more than one backend to be used at once. For example, in most configs, the B0XX input viewer backend is used as a secondary backend whenever the DInput backend is used. In each iteration, the main loop tells each of the backends to send their respective reports. In future, there could be more backends for things like writing information to an OLED display.
@@ -471,9 +466,7 @@ As a slightly crazier hypothetical example, one could even power all the control
 
 ### Controller not working with console or GameCube adapter
 
-If you are using an official adapter with an Arduino-based controller you will likely have to hold A on plugin which disables the polling latency optimisation by passing in a polling rate of 0 to the GamecubeBackend constructor.
-
-If you are using an Arduino-based controller without a boost circuit, you will need 5V power so for Mayflash adapter you need both USB cables plugged in, and on console the rumble line needs to be intact. Pico works natively with 3.3V power so this isn't an issue.
+If you are using an official adapter you may need to hold A on plugin, which disables the polling latency optimisation by passing in a polling rate of 0 to the GamecubeBackend constructor.
 
 ## Contributing
 
@@ -488,9 +481,6 @@ see the [tags on this repository](https://github.com/JonnyHaystack/HayBox/tags).
 
 ## Built With
 
-* [https://github.com/MHeironimus/ArduinoJoystickLibrary]() - Used for DInput support for AVR
-* [https://github.com/NicoHood/Nintendo]() - Used for GameCube and Nintendo 64 support for AVR
-* [https://github.com/JonnyHaystack/ArduinoKeyboard]() - Used for keyboard modes on AVR
 * [https://github.com/JonnyHaystack/arduino-nunchuk]() - Used for Nunchuk support
 * [https://github.com/JonnyHaystack/joybus-pio]() - Used for GameCube and Nintendo 64 support for RP2040
 * [https://github.com/earlephilhower/arduino-pico]() - Used for Arduino framework/PlatformIO support for Pico
@@ -506,8 +496,6 @@ See also the list of [contributors](https://github.com/JonnyHaystack/HayBox/cont
 
 * The B0XX team, for designing and creating an incredible controller
 * [@Crane1195](https://github.com/Crane1195) - for his DIYB0XX and GCCPCB projects, and for hours of answering my questions when I was first writing this
-* [@MHeironimus](https://github.com/MHeironimus) - for the Arduino Joystick library
-* [@NicoHood](https://github.com/NicoHood) - for the Nintendo library
 * [@GabrielBianconi](https://github.com/GabrielBianconi) - for the Arduino Nunchuk library
 * [@earlephilhower](https://github.com/earlephilhower) - for the arduino-pico core
 * [@maxgerhardt](https://github.com/maxgerhardt) - for adding PlatformIO support for arduino-pico

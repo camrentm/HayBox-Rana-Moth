@@ -39,7 +39,11 @@ class Persistence {
     static constexpr size_t config_offset = sizeof(ConfigHeader);
 
   private:
+#ifdef CONFIG_FILENAME
+    static constexpr char config_filename[] = CONFIG_FILENAME;
+#else
     static constexpr char config_filename[] = "config.bin";
+#endif
 
     bool CheckSavedConfig(File &config_file);
 };

@@ -15,40 +15,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - env: c53
-            bin_ext: uf2
-          - env: b0xx_r4
-            bin_ext: uf2
           - env: pico
             bin_ext: uf2
-          - env: schism
+          - env: pico_start
             bin_ext: uf2
-          - env: arduino_uno
-            bin_ext: hex
-          - env: arduino_nano
-            bin_ext: hex
-          - env: arduino_mega
-            bin_ext: hex
-          - env: arduino_leonardo
-            bin_ext: hex
-          - env: arduino_micro
-            bin_ext: hex
-          - env: b0xx_r1
-            bin_ext: hex
-          - env: b0xx_r2
-            bin_ext: hex
-          - env: gccmx
-            bin_ext: hex
-          - env: gccpcb1
-            bin_ext: hex
-          - env: gccpcb2
-            bin_ext: hex
-          - env: htangl_v1
-            bin_ext: hex
-          - env: lbx
-            bin_ext: hex
-          - env: smashbox
-            bin_ext: hex
 
     steps:
     - name: Check out source code
